@@ -154,7 +154,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let services = ecs.fetch_services(cluster).await?;
 
     let service_idx = FuzzySelect::with_theme(&ColorfulTheme::default())
-        .with_prompt("Select cluster")
+        .with_prompt("Select service")
         .default(0)
         .items(&services[..])
         .interact()
