@@ -1,6 +1,7 @@
 [package]
 name = "ecsr"
 description = "ecsr is a tool that makes it easy to execute the ecs execute command"
+authors = ["Yusuke Egami <egpersent@gmail.com>"]
 license = "MIT"
 version = "0.1.0"
 edition = "2021"
