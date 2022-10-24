@@ -12,3 +12,11 @@ Read profile from /Users/egapool/.aws/credentials
 ✔ Command · bash
 aws --profile default ecs execute-command --cluster your-cluster-name --container web-container --interactive --command bash --task 14eb7546ebcx45d48656537cba8dd7ea
 ```
+
+## Install
+
+### OSX
+```
+$ brew tap egapool/ecsr
+$ brew install ecsr
+```
