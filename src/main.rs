@@ -119,12 +119,11 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             profiles.push(line.to_string().replace('[', "").replace(']', ""));
         }
     }
-    let profile_name_idx = FuzzySelect::with_theme(&ColorfulTheme::default())
-        .with_prompt(format!("Select profile from {:?}", path.into_os_string()))
-        .default(0)
-        .items(&profiles[..])
-        .interact()
-        .unwrap();
+    let profile_name_idx = use_fuzzy_select(
+        &format!("Select profile from {:?}", path.into_os_string()),
+        &profiles,
+    )
+    .unwrap();
     let profile = &profiles[profile_name_idx];
 
     // This credentials provider will load credentials from ~/.aws/credentials.
@@ -141,46 +140,19 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let ecs = EcsClient::new(&config);
 
     let clusters = ecs.fetch_clusters().await?;
-
-    let cluster_arn_idx = FuzzySelect::with_theme(&ColorfulTheme::default())
-        .with_prompt("Select cluster")
-        .default(0)
-        .items(&clusters[..])
-        .interact()
-        .unwrap();
-
+    let cluster_arn_idx = use_fuzzy_select("Select cluster", &clusters).unwrap();
     let cluster = &clusters[cluster_arn_idx];
 
     let services = ecs.fetch_services(cluster).await?;
-
-    let service_idx = FuzzySelect::with_theme(&ColorfulTheme::default())
-        .with_prompt("Select service")
-        .default(0)
-        .items(&services[..])
-        .interact()
-        .unwrap();
+    let service_idx = use_fuzzy_select("Select service", &services).unwrap();
     let service = &services[service_idx];
 
     let tasks = ecs.fetch_tasks(cluster, service).await?;
-
-    let task_idx = FuzzySelect::with_theme(&ColorfulTheme::default())
-        .with_prompt("Select task")
-        .default(0)
-        .items(&tasks[..])
-        .interact()
-        .unwrap();
-
+    let task_idx = use_fuzzy_select("Select task", &tasks).unwrap();
     let task = &tasks[task_idx];
 
     let containers = ecs.fetch_containers(cluster, task).await?;
-
-    let container_idx = FuzzySelect::with_theme(&ColorfulTheme::default())
-        .with_prompt("Select container")
-        .default(0)
-        .items(&containers[..])
-        .interact()
-        .unwrap();
-
+    let container_idx = use_fuzzy_select("Select container", &containers).unwrap();
     let container = &containers[container_idx];
 
     let command: String = Input::with_theme(&ColorfulTheme::default())
@@ -204,4 +176,12 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     println!("{}", command);
 
     Ok(())
+}
+
+fn use_fuzzy_select(prompt: &str, list: &[String]) -> Result<usize, std::io::Error> {
+    FuzzySelect::with_theme(&ColorfulTheme::default())
+        .with_prompt(prompt)
+        .default(0)
+        .items(list)
+        .interact()
 }

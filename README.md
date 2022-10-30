@@ -1,8 +1,9 @@
 # ECSR
+A cli tool that makes it easy to execute AWS ECS exec-command
 
 ## Example
 ```
-$ ./target/release/ecsr
+$ ecsr
 Read profile from /Users/egapool/.aws/credentials
 ✔ Select profile from "/Users/egapool/.aws/credentials" · default
 ✔ Select cluster · your-cluster-name
@@ -15,7 +16,7 @@ aws --profile default ecs execute-command --cluster your-cluster-name --containe
 
 ## Install
 
-### OSX
+### OSX(Apple Silicon)
 ```
 $ brew tap egapool/ecsr
 $ brew install ecsr
