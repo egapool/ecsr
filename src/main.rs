@@ -119,6 +119,11 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             profiles.push(line.to_string().replace('[', "").replace(']', ""));
         }
     }
+
+    if profiles.is_empty() {
+        return Err("No profile found".into());
+    }
+
     let profile_name_idx = use_fuzzy_select(
         &format!("Select profile from {:?}", path.into_os_string()),
         &profiles,
