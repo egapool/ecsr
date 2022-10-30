@@ -153,8 +153,16 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let service = &services[service_idx];
 
     let tasks = ecs.fetch_tasks(cluster, service).await?;
-    let task_idx = use_fuzzy_select("Select task", &tasks).unwrap();
-    let task = &tasks[task_idx];
+    let mut task = match tasks.get(0) {
+        Some(t) => t,
+        None => {
+            return Err("No task found".into());
+        }
+    };
+    if tasks.len() != 1 {
+        let task_idx = use_fuzzy_select("Select task", &tasks).unwrap();
+        task = &tasks[task_idx];
+    }
 
     let containers = ecs.fetch_containers(cluster, task).await?;
     let container_idx = use_fuzzy_select("Select container", &containers).unwrap();
